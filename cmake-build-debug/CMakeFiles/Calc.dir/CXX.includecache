@@ -1,0 +1,80 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/basicNumber.cpp
+iostream
+-
+basicNumber.h
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/basicNumber.h
+string
+-
+cmath
+-
+tools.h
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/tools.h
+sstream
+-
+
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/basicNumber.h
+vector
+-
+string
+-
+iostream
+-
+
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/imageNumber.cpp
+imageNumber.h
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/imageNumber.h
+
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/imageNumber.h
+basicNumber.h
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/basicNumber.h
+
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/matrix.cpp
+matrix.h
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/matrix.h
+
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/matrix.h
+basicNumber.h
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/basicNumber.h
+
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/tools.cpp
+string
+-
+cstdio
+-
+
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/tools.h
+string
+-
+
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/vec.cpp
+vec.h
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/vec.h
+
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/vec.h
+basicNumber.h
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/basicNumber.h
+
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/main.cpp
+iostream
+-
+string
+-
+apps/basicNumber.h
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/basicNumber.h
+apps/tools.h
+F:/CodeFile/ProminHLL HW/ProminHLL 2 HW/Calc/apps/tools.h
+cstdlib
+-
+ctime
+-
+cmath
+-
+
