@@ -2,13 +2,16 @@
 // Created by Rozc on 2018/5/4.
 //
 #include <iostream>
-#include "basicNumber.h"
 #include <string>
 #include <cmath>
-#include "tools.h"
 #include <sstream>
+#include <stack>
+#include "basicNumber.h"
+#include "tools.h"
 
 using namespace std;
+
+// Class Function Start
 
 int basicNumber::DIVISION_ITERATIONS = 10;
 int basicNumber::ROOT_ITERATIONS = 50;
@@ -731,3 +734,99 @@ basicNumber basicLCM(basicNumber a, basicNumber b) {
 //basicNumber basicNumber::basicASin() {}
 //basicNumber basicNumber::basicACos() {}
 //basicNumber basicNumber::basicATan() {}
+
+// Class Function End
+
+// Main Function Start
+
+int oprtPriority(char op) {
+    switch(op) {
+        case '(':
+        case ')':
+            return 1;
+        case '#':
+            return 2;
+        case '^':
+            return 3;
+        case '*':
+        case '/':
+        case '%':
+            return 4;
+        case '+':
+        case '-':
+            return 5;
+        default:
+            return -1;
+    }
+}
+
+void realPre(string& expression) {
+    int sz = expression.size();
+    for(int i=0; i<sz; i++) {
+        if(expression[i] == '-' &&
+           (i==0 ||
+            (expression[i-1] != ')' &&
+             !(48 <= expression[i-1] && expression[i-1] < 58 )))) {
+
+            expression[i] = '#';
+        }
+    }
+}
+
+string realRePolish(string expression) {
+    realPre(expression);
+
+    int sz = expression.size();
+    stack<char> stkOprt;
+    string RePolish;
+
+    for(int i=0; i<sz; i++) {
+        char expr = expression[i];
+        if((48 <= expr && expr < 58) || expr == '.') {
+            RePolish += expr;
+        } else {
+
+            RePolish += ',';
+            if(expr == '(') {
+
+                stkOprt.push(expr);
+
+            } else if(expr == ')') {
+
+                while(stkOprt.top() != '(') {
+                    RePolish += stkOprt.top();
+                    stkOprt.pop();
+                }
+                stkOprt.pop(); // Pop the '('
+
+            } else  {
+
+                if(stkOprt.empty() || stkOprt.top() == '(' ||
+                   oprtPriority(expr)<oprtPriority(stkOprt.top())) {
+                    stkOprt.push(expr);
+                } else {
+                    while(!stkOprt.empty() && stkOprt.top() != '(') {
+                        RePolish += stkOprt.top();
+                        stkOprt.pop();
+                    }
+                    stkOprt.push(expr);
+                }
+
+            }
+
+        }
+    }
+    while(!stkOprt.empty()) {
+        RePolish += stkOprt.top();
+        stkOprt.pop();
+    }
+
+}
+
+void realMode1() {
+
+}
+
+void realMode2() {
+
+};

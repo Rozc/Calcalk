@@ -24,12 +24,12 @@ int main() {
     cout << endl;
 
     // Read keyboard input, choose mode
-    cout << "Please choose mode: " << endl;
-    cout << "   1 for Normal(Real Number) Mode" << endl;
-    cout << "   2 for Complex Mode" << endl;
-    cout << "   3 for Matrix Mode" << endl;
-    cout << "   4 for Vector Mode" << endl;
-    cout << "   0 for Exit" << endl;
+    cout << "Please choose mode: " << endl <<
+        "   1 for Normal(Real Number) Mode" << endl <<
+        "   2 for Complex Mode" << endl <<
+        "   3 for Matrix Mode" << endl <<
+        "   4 for Vector Mode" << endl <<
+        "   0 to Exit" << endl;
     int mode;
     while(true) {
         cout << "Please input: ";
@@ -54,18 +54,22 @@ int main() {
 
 void RealCalc() {
     cout << "Now in Normal Mode" << endl;
-    cout << "In this mode, you can choose 2 sub mode: " <<
-            "   1 for expression only contains +, -, *, /, ^(power), _(root) and %%(mod)" <<
-            "   2 for function (sin, cos, gcd, lcm, round, and so on)" << 
-            "   0 for Exit." << endl;
+    cout << "In this mode, you can choose 2 sub mode: " << endl <<
+            "   1 for expression only contains +, -, *, /, ^(power), _(root), %(mod) and '()'" << endl <<
+            "   2 for function (sin, cos, gcd, lcm, round, and so on)(also can contains expression)" << endl <<
+            "   0 to Exit." << endl;
             
-    int submode;
+    int subMode;
     while(true) {
-        cin >> submode;
-        switch(submode) {
+        cout << "Please input: ";
+        cin >> subMode;
+        switch(subMode) {
             case 1: realMode1(); break;
             case 2: realMode2(); break;
             case 0: goto realEXIT;
+            default:
+                cout << "Bad input, please input an integer between 0 and 2" << endl;
+                break;
         }
     }
     

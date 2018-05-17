@@ -134,4 +134,13 @@ basicNumber basicGCD(basicNumber a, basicNumber b);
 basicNumber basicLCM(basicNumber a, basicNumber b);
 
 
+// main Function
+int oprtPriority(char op);
+void realPre(string& expression);
+string realRePolish(string expression);
+
+void realMode1();
+void realMode2();
+
+
 #endif //CALC_BASICNUMBER_H
