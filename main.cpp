@@ -19,7 +19,9 @@ int main() {
 
     // BOOT
     // TODO: Print welcome info
-    cout << "Welcome!" << endl << endl;
+    cout << "Welcome to Calcalk!" << endl;
+    cout << "For the user docs, see /Calcalk/docs" << endl;
+    cout << endl;
 
     // Read keyboard input, choose mode
     cout << "Please choose mode: " << endl;
@@ -30,27 +32,45 @@ int main() {
     cout << "   0 for Exit" << endl;
     int mode;
     while(true) {
+        cout << "Please input: ";
         cin >> mode; // 1: Real, 2: Image, 3: Matrix, 4: Vector, 0: Exit
         switch(mode) {
-            case 0: goto EXIT;
+            case 0: goto mainEXIT;
             case 1: RealCalc(); break;
             case 2: ImageCalc(); break;
             case 3: MatCalc(); break;
             case 4: VecCalc(); break;
             default:
-                cout << "Bad input" << endl;
+                cout << "Bad input, please input an integer between 0 and 4" << endl;
                 break;
         }
     }
 
-    EXIT:
-    cout << "See you next time" << endl;
+    mainEXIT:
+    cout << "See you next time." << endl;
 
     return 0;
 }
 
 void RealCalc() {
     cout << "Now in Normal Mode" << endl;
+    cout << "In this mode, you can choose 2 sub mode: " <<
+            "   1 for expression only contains +, -, *, /, ^(power), _(root) and %%(mod)" <<
+            "   2 for function (sin, cos, gcd, lcm, round, and so on)" << 
+            "   0 for Exit." << endl;
+            
+    int submode;
+    while(true) {
+        cin >> submode;
+        switch(submode) {
+            case 1: realMode1(); break;
+            case 2: realMode2(); break;
+            case 0: goto realEXIT;
+        }
+    }
+    
+    realEXIT:
+    cout << "Exit Normal Mode, return to main menu." << endl << endl;
 }
 void ImageCalc() {
     cout << "Now in Complex Mode" << endl;
