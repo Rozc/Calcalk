@@ -6,6 +6,7 @@
 #include <vector>
 #include <cstdio>
 #include <stack>
+#include "basicNumber.h"
 
 using namespace std;
 
@@ -23,8 +24,43 @@ string intToString(long long num) {
     return result;
 }
 
-void realSolve(string expression) {
-    stack<char> stkOperator;
+int oprtPriority(char op) {
+    switch(op) {
+        case ''
+    }
+}
 
+void realSolve(const string& expression) {
+    int sz = (int)expression.size();
+    stack<char> stkOprt;
+    string RePolish;
+
+    for(int i=0; i<sz; i++) {
+        char exp = expression[i];
+        if((48 <= exp && exp < 58) || exp == '.') {
+            RePolish += exp;
+        } else {
+
+            RePolish += ',';
+            if(exp == '(') {
+
+                stkOprt.push(exp);
+
+            } else if(exp == ')') {
+
+                while(stkOprt.top() != '(') {
+                    RePolish += stkOprt.top();
+                    stkOprt.pop();
+                }
+                stkOprt.pop(); // Pop the '('
+
+            } else {
+
+
+
+            }
+
+        }
+    }
 
 }

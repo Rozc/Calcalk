@@ -19,6 +19,7 @@ int main() {
 
     // BOOT
     // TODO: Print welcome info
+    cout << "Welcome!" << endl << endl;
 
     // Read keyboard input, choose mode
     cout << "Please choose mode: " << endl;
@@ -26,17 +27,24 @@ int main() {
     cout << "   2 for Complex Mode" << endl;
     cout << "   3 for Matrix Mode" << endl;
     cout << "   4 for Vector Mode" << endl;
+    cout << "   0 for Exit" << endl;
     int mode;
-    cin >> mode; // 1: Real, 2: Image, 3: Matrix, 4: Vector
-    switch(mode) {
-        case 1: RealCalc(); break;
-        case 2: ImageCalc(); break;
-        case 3: MatCalc(); break;
-        case 4: VecCalc(); break;
-        default:
-            cout << "Bad input" << endl;
-            break;
+    while(true) {
+        cin >> mode; // 1: Real, 2: Image, 3: Matrix, 4: Vector, 0: Exit
+        switch(mode) {
+            case 0: goto EXIT;
+            case 1: RealCalc(); break;
+            case 2: ImageCalc(); break;
+            case 3: MatCalc(); break;
+            case 4: VecCalc(); break;
+            default:
+                cout << "Bad input" << endl;
+                break;
+        }
     }
+
+    EXIT:
+    cout << "See you next time" << endl;
 
     return 0;
 }
