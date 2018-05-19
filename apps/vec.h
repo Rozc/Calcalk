@@ -11,7 +11,7 @@
 class vec {
 private:
     basicNumber len;
-    basicNumber* vector;
+    vector<basicNumber> vect;
 public:
     vec();
     vec(basicNumber* vec);
