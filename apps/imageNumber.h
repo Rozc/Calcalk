@@ -14,22 +14,46 @@ private:
     basicNumber imagePart;
 public:
     imageNumber();
-    imageNumber(basicNumber, basicNumber);
+    imageNumber(const basicNumber&, const basicNumber&);
+    imageNumber(const long long);
+    imageNumber(const imageNumber& other);
+
+    friend istream& operator>>(istream& in, imageNumber& item);
+    friend ostream& operator<<(ostream& out, const imageNumber& item);
 
     imageNumber operator+(imageNumber& r);
     imageNumber operator-(imageNumber& r);
     imageNumber operator*(imageNumber& r);
     imageNumber operator/(imageNumber& r);
+    imageNumber& operator=(imageNumber r);
 
-    imageNumber imagePower(imageNumber pow);
+    imageNumber& operator+=(imageNumber& r);
+    imageNumber& operator-=(imageNumber& r);
+    imageNumber& operator*=(imageNumber& r);
+    imageNumber& operator/=(imageNumber& r);
+
+    bool operator==(imageNumber& r);
+    bool operator==(long long r);
+
+
+    imageNumber imagePower(basicNumber pow);
 
     basicNumber imageAbs();
-    double imageAngle();
+    basicNumber imageAngle();
 
     imageNumber imageConj();
 
 
 };
+
+void CmplxInput(imageNumber*);
+void CmplxCalc(imageNumber*);
+
+imageNumber CmplxBasicCalc(int, int, int, imageNumber*);
+
+void CmplxCalcInfo();
+void CmplxInputInfo();
+void ComplexInfo();
 
 
 #endif //CALC_IMAGENUMBER_H

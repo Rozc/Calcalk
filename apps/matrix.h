@@ -8,20 +8,20 @@
 
 #include "basicNumber.h"
 
+#include <vector>
+
 class matrix {
 private:
-    basicNumber row;
-    basicNumber col;
-    basicNumber** mat;
+    vector<vector<int> > mat;
 public:
     matrix();
     matrix(matrix& other);
-    explicit matrix(basicNumber**);
+    matrix(vector<vector<int> >&);
 
     matrix operator+(matrix& r);
     matrix operator-(matrix& r);
     matrix operator*(matrix& r);
-    friend matrix matrixNumP(basicNumber num);
+    friend matrix matrixNumP(basicNumber num, vector<vector<int> > vec);
 
     matrix matrixT();
     basicNumber matrixDeterminant();

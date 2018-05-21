@@ -38,6 +38,8 @@ public:
     bool getAcNe();
     int getEp();
 
+    void setEp(int);
+
     void wrongNumber();
 
     basicNumber& operator=(basicNumber r);
@@ -147,7 +149,7 @@ basicNumber basicLCM(basicNumber a, basicNumber b);
 // main Function
 int oprtPriority(char op);
 void realPre(string& expression);
-string realRePolish(string expression);
+string realRePolish(string expression, basicNumber ansLast);
 basicNumber realCalcRP(string reP);
 basicNumber realCalcWithOprt(basicNumber a, basicNumber b, char op);
 

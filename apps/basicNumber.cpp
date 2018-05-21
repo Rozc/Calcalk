@@ -26,6 +26,10 @@ int basicNumber::getEp() {
     return this->ep;
 }
 
+void basicNumber::setEp(int e) {
+    ep = e;
+}
+
 basicNumber::basicNumber() {
     /*basicNumber 缺省构造函数*/
     AcNe = true;
@@ -35,22 +39,26 @@ basicNumber::basicNumber() {
 basicNumber::basicNumber(const string& num) {
     /* basicNumber 构造函数
      * Args:
-     *  string& num: 字符串形式传入的数, e.g. 1234.5678, -1234.8765
+     *  string& num: 字符串形式传入的数, e.g. 1234.5678, -1234.8765, +156.4525
      * */
-    AcNe = num[0] != '-';
+    string numOp = num;
+    if(numOp[0] == '+') {
+        numOp.erase(0, 1);
+    }
+    AcNe = numOp[0] != '-';
     ep = 0;
     int idx;
-    for(idx=AcNe?0:1; idx<num.size(); idx++) {
-        if(num[idx] == '.') {
-            ep = num.size()-idx-1;
+    for(idx=AcNe?0:1; idx<numOp.size(); idx++) {
+        if(numOp[idx] == '.') {
+            ep = numOp.size()-idx-1;
             continue;
         }
-        if(num[idx] < 48 || num[idx] >= 58) { // 不是数字, 异常, 返回 ep=-1 的对象
+        if(numOp[idx] < 48 || numOp[idx] >= 58) { // 不是数字, 异常, 返回 ep=-1 的对象
             intPart.clear();
             ep = -1;
             return;
         }
-        intPart.push_back(num[idx]-48);
+        intPart.push_back(numOp[idx]-48);
     }
     this->clearZero();
 
@@ -122,6 +130,9 @@ istream& operator>>(istream& in, basicNumber& item) {
     string buf;
     in >> buf;
     item = buf;
+    if(item.ep == -1) {
+       in.setstate(ios_base::failbit);
+    }
     return in;
 }
 
@@ -163,15 +174,15 @@ basicNumber basicNumber::operator+(basicNumber r) {
             intPart.pop_back();
         }
 
-        result.AcNe = !AcNe&&!(r.AcNe) ? 0 : 1;
+        result.AcNe = !(!AcNe&&!(r.AcNe));
     } else {
         if(AcNe && !(r.AcNe)) {
-            r.AcNe = 1;
+            r.AcNe = true;
             result = *this - r;
         } else {
-            AcNe = 1;
+            AcNe = false;
             result = r - *this;
-            AcNe = 0;
+            AcNe = false;
         }
     }
     result.clearZero();
@@ -688,8 +699,10 @@ basicNumber basicNumber::basicLn() {
     return result;
 }
 basicNumber basicNumber::basicLog(basicNumber base) { // 换底公式
-    if(base == 1) {
-        return -1;
+    if(base == 1 || base <= 0 || *this <= 0) {
+        basicNumber bad;
+        bad.wrongNumber();
+        return bad;
     }
     return this->basicLn()/base.basicLn();
 }
@@ -724,7 +737,7 @@ basicNumber basicLCM(basicNumber a, basicNumber b) {
     return a*b/basicGCD(a, b);
 }
 
-
+// 好似没有用到这三个诶
 basicNumber basicRound(const basicNumber& num, int d) { // default d = 0;
     basicNumber result = num;
     int idx = result.intPart.size();
@@ -958,11 +971,25 @@ string realRePolish(string expression, basicNumber ansLast) {
 
             RePolish += ',';
 
-            if(expr == 'a') {
+            if(expr == 'n') {
                 stringstream buf;
                 string tmp;
 
                 buf << ansLast;
+                buf >> tmp;
+                RePolish += tmp;
+            } else if(expr == 'p') {
+                stringstream buf;
+                string tmp;
+
+                buf << PI;
+                buf >> tmp;
+                RePolish += tmp;
+            } else if(expr == 'e') {
+                stringstream buf;
+                string tmp;
+
+                buf << EX;
                 buf >> tmp;
                 RePolish += tmp;
             } else if(expr == '(') {
@@ -977,7 +1004,7 @@ string realRePolish(string expression, basicNumber ansLast) {
                 }
                 stkOprt.pop(); // Pop the '('
 
-            } else  {
+            } else {
 
                 if(stkOprt.empty() || stkOprt.top() == '(' ||
                    oprtPriority(expr)<oprtPriority(stkOprt.top())) {
@@ -1095,6 +1122,12 @@ basicNumber real2Calc(int func, basicNumber& ansLast) {
     while(true) {
         cout << "Please input expression A: ";
         cin >> exprA;
+        if(!cin) {
+            cout << "Bad input, illegal expression." << endl;
+            cin.clear();
+            while(cin.get() != '\n');
+            continue;
+        }
         while(cin.get() != '\n');
         valA = realCalcRP(realRePolish(exprA, ansLast));
         if(valA.getEp() != -1) {
@@ -1123,8 +1156,14 @@ basicNumber real2Calc(int func, basicNumber& ansLast) {
         string exprB;
         basicNumber valB;
         while(true) {
-            cout << "Please input expression A: ";
+            cout << "Please input expression B: ";
             cin >> exprB;
+            if(!cin) {
+                cout << "Bad input, illegal expression." << endl;
+                cin.clear();
+                while(cin.get() != '\n');
+                continue;
+            }
             while(cin.get() != '\n');
             valB = realCalcRP(realRePolish(exprB, ansLast));
             if(valB.getEp() != -1) {
@@ -1149,12 +1188,19 @@ basicNumber real2Calc(int func, basicNumber& ansLast) {
 }
 
 void realMode1(basicNumber& ansLast) {
-    system("cls");
-    realMode1Info();
 
+    int errorCode=0;
     string expr;
     basicNumber result;
+
     while(true) {
+        system("cls");
+        realMode1Info();
+        if(errorCode == 1) {
+            realMode1ERRORInfo();
+        }
+        cout << "Expression: " << expr << endl;
+        cout << "Result: " << ansLast << endl;
         cout << "Please input the expression('EXIT' to quit): ";
         cin >> expr;
         while(cin.get() != '\n');
@@ -1165,10 +1211,10 @@ void realMode1(basicNumber& ansLast) {
         }
         result = realCalcRP(realRePolish(expr, ansLast));
         if(result.getEp() == -1) {
-            realMode1ERRORInfo();
+            errorCode = 1;
         } else {
             ansLast = result;
-            cout << "Answer: " << result << endl << endl;
+            errorCode = 0;
         }
 
     }
@@ -1176,19 +1222,26 @@ void realMode1(basicNumber& ansLast) {
 }
 
 void realMode2(basicNumber& ansLast) {
-    system("cls");
-    realMode2Info();
-
-    int func;
-
+    int func, errorCode=0;
     basicNumber result;
 
     while(true) {
+
+        system("cls");
+        realMode2Info();
+
+        if(errorCode == 1) {
+            cout << "Bad input, please input an integer between 0 and 11" << endl;
+        } else if(errorCode == 2) {
+            realMode2ERRORInfo();
+        }
+        cout << endl << "Result: " << result << endl;
+
         cout << "Please input function ID(0 to quit): ";
         cin >> func;
 
         if(!cin) {
-            cout << "Bad input, please input an integer between 0 and 11" << endl;
+            errorCode = 1;
             cin.clear();
             while(cin.get() != '\n');
             continue;
@@ -1200,14 +1253,14 @@ void realMode2(basicNumber& ansLast) {
         } else if(1 <= func && func <= 11) {
             result = real2Calc(func, ansLast);
         } else  {
-            cout << "Bad input, please input an integer between 0 and 11" << endl;
+            errorCode = 1;
         }
 
         if(result.getEp() == -1) {
-            realMode2ERRORInfo();
+            errorCode = 2;
         } else {
             ansLast = result;
-            cout << "Answer: " << result << endl << endl;
+            errorCode = 0;
         }
 
     }
@@ -1221,42 +1274,43 @@ void realMode2(basicNumber& ansLast) {
 
 void realModeInfo() {
     cout << endl << "Now in Normal Mode" << endl;
-    cout << "In this mode, you can choose 2 sub mode: " << endl <<
-         "   1 for expression only contains +, -, *, /, ^, _, %, $ and '()'" << endl <<
-         "   2 for function (sin, cos, gcd, lcm, round, and so on)(also can contains expression)" << endl <<
-         "   0 to Quit." << endl <<
-         "   You can use 'a' in expression for result of last calculation" << endl <<
-         "       (default value: 0)(It will be set to 0 when you leave Normal Mode)." << endl;
+    cout << "In this mode, you can choose 2 sub mode: " << endl;
+    cout << "    1 for expression only contains +, -, *, /, ^, _, %, $ and '()'" << endl;
+    cout << "    2 for function (sin, cos, gcd, lcm, round, and so on)(expression available)" << endl;
+    cout << "    0 to Quit." << endl;
+    cout << "    You can use 'n' in expression for result of last calculation" << endl;
+    cout << "    You can use 'p' and 'e' in expression for PI or EXP(1)" << endl;
+    cout << "        (default value: 0)(It will be set to 0 when you leave Normal Mode)." << endl;
 }
 
 void realMode1Info() {
-    cout << endl << "Now in Normal Mode - Mode 1" << endl;
+    cout << "Now in Normal Mode - Mode 1" << endl;
     cout << "Operator Priority Order:" << endl <<
-         "   1. (, )" << endl <<
-         "   2. - | Negative Symbol" << endl <<
-         "   3. ^, _ | ^ = Power, _ = Root(A_B = B_root(A))" << endl <<
-         "   4. *, /, %, $ | $ = integer division " << endl <<
-         "   5. +, -" << endl << endl;
+         "    1. (, )" << endl <<
+         "    2. - | Negative Symbol" << endl <<
+         "    3. ^, _ | ^ = Power, _ = Root(A_B = B_root(A))" << endl <<
+         "    4. *, /, %, $ | $ = integer division " << endl <<
+         "    5. +, -" << endl << endl;
 }
 
 void realMode2Info() {
-    cout << endl << "Now in Normal Mode - Mode 2" << endl;
+    cout << "Now in Normal Mode - Mode 2" << endl;
     cout << "Functions List:" << endl <<
-        "   1. abs(A)" << endl <<
-        "   2. ln(A) (A>0) (Precision: .3)" << endl <<
-        "   3. sin(A), 4. cos(A), 5. tan(A), 6. asin(A) (-1<A<1), 7. acos(A) (-1<A<1), 8. atan(A)" << endl <<
-        "   9. logA(B) (A>0, A!=0, B>0) (Precision: .3)" << endl <<
-        "   10. GCD(A, B), 11. LCM(A, B), require that A and B is a positive integer" << endl << endl;
+        "    1. abs(A)" << endl <<
+        "    2. ln(A) (A>0) (Precision: .3)" << endl <<
+        "    3. sin(A), 4. cos(A), 5. tan(A), 6. asin(A) (-1<A<1), 7. acos(A) (-1<A<1), 8. atan(A)" << endl <<
+        "    9. logA(B) (A>0, A!=1, B>0) (Precision: .3)" << endl <<
+        "    10. GCD(A, B), 11. LCM(A, B), require that A and B is a positive integer" << endl << endl;
 }
 
 void realMode1ERRORInfo() {
     cout << endl << "--- ERROR: in real Number Mode ---" << endl;
     cout << "Have you:" << endl;
-    cout << "   1. Divided by 0." << endl;
-    cout << "   2. A^B or A_B and B is not an integer." << endl <<
-         "      (A^B requires that B is an integer, A_B requires that B is a positive integer)." << endl;
-    cout << "   3. A%B or A$B and A or B is not integer." << endl;
-    cout << "   4. Illegal input." << endl;
+    cout << "    1. Divided by 0." << endl;
+    cout << "    2. A^B or A_B and B is not an integer." << endl <<
+         "        (A^B requires that B is an integer, A_B requires that B is a positive integer)." << endl;
+    cout << "    3. A%B or A$B and A or B is not integer." << endl;
+    cout << "    4. Illegal input." << endl;
     cout << "?" << endl;
     cout << "--- ERROR: End of error message ---" << endl << endl;
 }
