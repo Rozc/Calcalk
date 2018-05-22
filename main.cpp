@@ -316,11 +316,8 @@ void VecCalc() {
 
 
 void DEBUG() {
-    basicNumber a;
-    cin >> a;
-    cout << cin.fail() << endl;
-
-    system("pause");
+    string a = "\7\7\7";
+    cout << a << endl;
 }
 
 void Settings() {

@@ -12,19 +12,31 @@
 
 class matrix {
 private:
-    vector<vector<int> > mat;
+    vector<vector<basicNumber> > mat;
+    int row;
+    int col;
+
+    friend bool isHomotypic(const matrix& a, const matrix& b);
 public:
     matrix();
-    matrix(matrix& other);
-    matrix(vector<vector<int> >&);
+    matrix(const matrix& other);
+    matrix(vector<vector<basicNumber> >&);
 
-    matrix operator+(matrix& r);
-    matrix operator-(matrix& r);
-    matrix operator*(matrix& r);
-    friend matrix matrixNumP(basicNumber num, vector<vector<int> > vec);
+    int getRow() const;
+    int getCol() const;
+
+    // TODO: operator stream
+
+    matrix operator+(matrix& r) const;
+    matrix operator-(matrix& r) const;
+    matrix operator*(matrix& r) const;
+    friend matrix operator*(const basicNumber&, const matrix&) const;
+
+    // matrix inverseMatrix() const;
+
 
     matrix matrixT();
-    basicNumber matrixDeterminant();
+    basicNumber matrixDet();
 
 };
 

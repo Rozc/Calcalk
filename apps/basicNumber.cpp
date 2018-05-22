@@ -50,6 +50,11 @@ basicNumber::basicNumber(const string& num) {
     int idx;
     for(idx=AcNe?0:1; idx<numOp.size(); idx++) {
         if(numOp[idx] == '.') {
+            if(ep != 0) {
+                intPart.clear();
+                ep = -1;
+                return;
+            }
             ep = numOp.size()-idx-1;
             continue;
         }
@@ -969,7 +974,7 @@ string realRePolish(string expression, basicNumber ansLast) {
             RePolish += expr;
         } else {
 
-            RePolish += ',';
+            RePolish += '\7';
 
             if(expr == 'n') {
                 stringstream buf;
@@ -1021,7 +1026,7 @@ string realRePolish(string expression, basicNumber ansLast) {
 
         }
     }
-    RePolish += ',';
+    RePolish += '\7';
     while(!stkOprt.empty()) {
         RePolish += stkOprt.top();
         stkOprt.pop();
@@ -1036,12 +1041,12 @@ basicNumber realCalcRP(string reP) {
     basicNumber tmpNum, tmpLeft, tmpRight, tmpResult;
 
     for(int i=0; i<sz; i++) {
-        if(reP[i] == ',') {
+        if(reP[i] == '\7') {
             continue;
         } else if(48 <= reP[i] && reP[i] < 58) {
             stringstream buf;
 
-            buf << reP.substr(i, reP.find(',', i+1)-i);
+            buf << reP.substr(i, reP.find('\7', i+1)-i);
             buf >> tmpNum;
 
             if(tmpNum.getEp() == -1) { // ERROR
@@ -1049,7 +1054,7 @@ basicNumber realCalcRP(string reP) {
             }
 
             stkNum.push(tmpNum);
-            i = reP.find(',', i+1);
+            i = reP.find('\7', i+1);
         } else {
 
             if(reP[i] == '#') {
@@ -1287,9 +1292,9 @@ void realMode1Info() {
     cout << "Now in Normal Mode - Mode 1" << endl;
     cout << "Operator Priority Order:" << endl <<
          "    1. (, )" << endl <<
-         "    2. - | Negative Symbol" << endl <<
-         "    3. ^, _ | ^ = Power, _ = Root(A_B = B_root(A))" << endl <<
-         "    4. *, /, %, $ | $ = integer division " << endl <<
+         "    2. -            | Negative Symbol" << endl <<
+         "    3. ^, _         | ^ = Power, _ = Root(A_B = B_root(A))" << endl <<
+         "    4. *, /, %, $   | $ = integer division " << endl <<
          "    5. +, -" << endl << endl;
 }
 
