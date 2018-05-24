@@ -58,6 +58,10 @@ istream& operator>>(istream& in, imageNumber& item) {
 
     string buf;
     in >> buf;
+    if(buf.find(',') == string::npos || buf[0] == ',' || buf[buf.size()-1] == ',') {
+        in.setstate(ios_base::failbit);
+        return in;
+    }
 
     item.realPart = realCalcRP(realRePolish(buf.substr(0, buf.find(',')), 0));
     item.imagePart = realCalcRP(realRePolish(buf.substr(buf.find(',')+1), 0));
@@ -347,9 +351,10 @@ void CmplxCalc(imageNumber* var) {
 
 imageNumber CmplxBasicCalc(int l, int r, int oprt, imageNumber* var) {
     switch(oprt) {
-        case 1: return var[l-1] + var[r-1];
-        case 2: return var[l-1] - var[r-1];
-        case 3: return var[l-1] * var[r-1];
+        case 5: return var[l] + var[r];
+        case 6: return var[l] - var[r];
+        case 7: return var[l] * var[r];
+        case 8: return var[l] / var[r];
         default: return 0;
     }
 }
@@ -378,6 +383,14 @@ void ComplexInfo() {
     cout << "            n(ans) is the result of last calculation." << endl;
     cout << "            when you quit Complex Mode, all variable will be set to 0." << endl;
     cout << "        There are 2 kind of operations:" << endl;
-    cout << "            1. Input: set the value of variable a, b, c or d" << endl;
-    cout << "            2. Calculate: calculation with the variables above and functions" << endl;
+    cout << "            1. Input: set the value of variable a" << endl;
+    cout << "            2. Input: set the value of variable b" << endl;
+    cout << "            3. Input: set the value of variable c" << endl;
+    cout << "            4. Input: set the value of variable d" << endl;
+    cout << "            Calculate: calculation with the variables above and functions" << endl;
+    cout << "                5. +, 6. -, 7. *, 8. /" << endl;
+    cout << "                9. Power (Complex ^ Real)" << endl;
+    cout << "                10. Abs" << endl;
+    cout << "                11. Angle" << endl;
+    cout << "                12. Conjugate" << endl;
 }

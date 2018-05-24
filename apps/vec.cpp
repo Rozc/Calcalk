@@ -18,8 +18,8 @@ vec::vec(vec& other) {
     len = other.len;
 }
 
-bool vec::isEmpty() {
-    return len==0;
+int vec::getLen() {
+    return len;
 }
 
 istream& operator>>(istream& in, vec& item) {
@@ -27,6 +27,7 @@ istream& operator>>(istream& in, vec& item) {
     basicNumber num;
     in >> len;
     item.len = len;
+    item.v.clear();
     while(len--) {
         in >> num;
         if(num.getEp() == -1) {
@@ -96,7 +97,7 @@ basicNumber vec::vecAbs() {
 basicNumber vec::vecInnerP(vec& right) {
     basicNumber result = 0;
     if(len != right.len) {
-        result.setEp(-1);
+        result.setEp(-2);
         return result;
     }
 
@@ -148,10 +149,10 @@ vec vec::unitize() {
 void vecModeInfo() {
     cout << "Now in Vector Mode" << endl;
     cout << "    How to use:" << endl;
-    cout << "        We have 3 vector variable: a, b and n(ans)" << endl;
+    cout << "        We have 3 vector variables: a, b and n(ans)" << endl;
     cout << "            n(ans) is the result of last calculation." << endl;
     cout << "            if the result is not a vector, it won't be saved into n(ans)" << endl;
-    cout << "            when you quit Vector Mode, all variable will be cleared." << endl;
+    cout << "            when you quit Vector Mode, all variables will be cleared." << endl;
     cout << "        There are 2 kind of operations:" << endl;
     cout << "            1. Input: set the value of variable a" << endl;
     cout << "            2. Input: set the value of variable b" << endl;

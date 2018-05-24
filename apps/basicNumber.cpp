@@ -8,6 +8,11 @@
 #include <stack>
 #include "basicNumber.h"
 #include "tools.h"
+#include <windows.h>
+
+
+#define co(a) SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), a)
+#define ico(a) ;co(a); cout <<
 
 using namespace std;
 
@@ -185,7 +190,7 @@ basicNumber basicNumber::operator+(basicNumber r) {
             r.AcNe = true;
             result = *this - r;
         } else {
-            AcNe = false;
+            AcNe = true;
             result = r - *this;
             AcNe = false;
         }
@@ -562,6 +567,13 @@ int basicNumber::comp(const basicNumber& r) const {
      *  0 : 等于 ==
      *  1 : 大于 >
      * */
+
+    // Special Judge: -0 == 0
+    if(intPart.size() == 1 && r.intPart.size() == 1 &&
+            intPart[0] == 0 && r.intPart[0] == 0) {
+        return 0;
+    }
+
     bool bothNegFlag=false; // 记录两个操作数是否都为负
     if(AcNe && !(r.AcNe)) {
         return 1;
@@ -771,6 +783,7 @@ basicNumber basicRound(const basicNumber& num, int d) { // default d = 0;
         result.intPart[idx-1] -= 10;
         idx--;
     }
+    result.clearZero();
 
     return result;
 }
@@ -1128,7 +1141,9 @@ basicNumber real2Calc(int func, basicNumber& ansLast) {
         cout << "Please input expression A: ";
         cin >> exprA;
         if(!cin) {
+            co(0x0c);
             cout << "Bad input, illegal expression." << endl;
+            co(0x07);
             cin.clear();
             while(cin.get() != '\n');
             continue;
@@ -1164,7 +1179,9 @@ basicNumber real2Calc(int func, basicNumber& ansLast) {
             cout << "Please input expression B: ";
             cin >> exprB;
             if(!cin) {
+                co(0x0c);
                 cout << "Bad input, illegal expression." << endl;
+                co(0x07);
                 cin.clear();
                 while(cin.get() != '\n');
                 continue;
@@ -1201,12 +1218,15 @@ void realMode1(basicNumber& ansLast) {
     while(true) {
         system("cls");
         realMode1Info();
+        cout << "Expression: " << expr << endl;
         if(errorCode == 1) {
             realMode1ERRORInfo();
+        } else {
+            cout << "Result: " << ansLast << endl;
         }
-        cout << "Expression: " << expr << endl;
-        cout << "Result: " << ansLast << endl;
-        cout << "Please input the expression('EXIT' to quit): ";
+
+
+        cout << "Please input the expression('" ico(0x0c) "exit" ico(0x0c) "' to quit): ";
         cin >> expr;
         while(cin.get() != '\n');
         if(expr == "EXIT" || expr == "exit") {
@@ -1236,7 +1256,9 @@ void realMode2(basicNumber& ansLast) {
         realMode2Info();
 
         if(errorCode == 1) {
+            co(0x0c);
             cout << "Bad input, please input an integer between 0 and 11" << endl;
+            co(0x07);
         } else if(errorCode == 2) {
             realMode2ERRORInfo();
         }
@@ -1278,50 +1300,70 @@ void realMode2(basicNumber& ansLast) {
 // Message Function
 
 void realModeInfo() {
-    cout << endl << "Now in Normal Mode" << endl;
+    cout << "| Main Menu |"; co(0x70); cout << " Normal Mode "; co(0x07); cout << "| Complex Mode | Matrix Mode | Vector Mode |" << endl;
+    cout << "======================================================================" << endl << endl;
     cout << "In this mode, you can choose 2 sub mode: " << endl;
-    cout << "    1 for expression only contains +, -, *, /, ^, _, %, $ and '()'" << endl;
-    cout << "    2 for function (sin, cos, gcd, lcm, round, and so on)(expression available)" << endl;
-    cout << "    0 to Quit." << endl;
-    cout << "    You can use 'n' in expression for result of last calculation" << endl;
-    cout << "    You can use 'p' and 'e' in expression for PI or EXP(1)" << endl;
-    cout << "        (default value: 0)(It will be set to 0 when you leave Normal Mode)." << endl;
+    cout << "    " ico(0x0d) "1" ico(0x07) " for" ico(0x0b) " expression" ico(0x07) " only contains " ico(0x0a)
+            "+ - * / ^ _ % $" ico(0x07) " and '" ico(0x0a) "()" ico(0x07) "'" << endl;
+
+    cout << "    " ico(0x0d) "2" ico(0x07) " for" ico(0x0b) " function " ico(0x07) " (" ico(0x0a) "sin" ico(0x07) ", "
+            ico(0x0a) "cos" ico(0x07) ", " ico(0x0a) "gcd" ico(0x07) ", " ico(0x0a) "lcm" ico(0x07) ", " ico(0x0a)
+            "round" ico(0x07) ", and so on)(expression available)" << endl;
+
+    cout << "    " ico(0x0d) "0" ico(0x07) "  to" ico(0x0c) " Quit" ico(0x07) "." << endl;
+    cout << "    You can use '" ico(0x0a) "n" ico(0x07) "' in expression for result of last calculation" << endl;
+    cout << "        (default value: " ico(0x0a) "0" ico(0x07) ")(It will be set to 0 when you leave Normal Mode)." << endl;
+    cout << "    You can use '" ico(0x0a) "p" ico(0x07) "' and '" ico(0x0a) "e" ico(0x07) "' in expression for PI or EXP(1)" << endl << endl;
+
 }
 
 void realMode1Info() {
-    cout << "Now in Normal Mode - Mode 1" << endl;
-    cout << "Operator Priority Order:" << endl <<
-         "    1. (, )" << endl <<
-         "    2. -            | Negative Symbol" << endl <<
-         "    3. ^, _         | ^ = Power, _ = Root(A_B = B_root(A))" << endl <<
-         "    4. *, /, %, $   | $ = integer division " << endl <<
-         "    5. +, -" << endl << endl;
+    cout << "| Main Menu |"; co(0x70); cout << " Normal Mode "; co(0x07); cout << "| Complex Mode | Matrix Mode | Vector Mode |" << endl;
+    cout << "======================================================================" << endl << endl;
+
+    cout << "Operator Priority Order:" << endl;
+    co(0x0d); cout << "    1" ico(0x07) ". " ico(0x0a) "(" ico(0x07) ", " ico(0x0a) ")" << endl; co(0x07);
+    co(0x0d); cout << "    2" ico(0x07) ". " ico(0x0a) "-" ico(0x07) "            | Negative Symbol" << endl;
+    co(0x0d); cout << "    3" ico(0x07) ". " ico(0x0a) "^" ico(0x07) ", " ico(0x0a) "_" ico(0x07) "         | ^ = Power, _ = Root(A_B = B_root(A))" << endl;
+    co(0x0d); cout << "    4" ico(0x07) ". " ico(0x0a) "*" ico(0x07) ", " ico(0x0a) "/" ico(0x07) ", " ico(0x0a)
+                      "%" ico(0x0a) ", " ico(0x0a) "$" ico(0x07) "   | $ = integer division " << endl;
+
+    co(0x0d); cout << "    5" ico(0x07) ". " ico(0x0a) "+" ico(0x07) ", " ico(0x0a) "-" << endl << endl; co(0x07);
 }
 
 void realMode2Info() {
-    cout << "Now in Normal Mode - Mode 2" << endl;
-    cout << "Functions List:" << endl <<
-        "    1. abs(A)" << endl <<
-        "    2. ln(A) (A>0) (Precision: .3)" << endl <<
-        "    3. sin(A), 4. cos(A), 5. tan(A), 6. asin(A) (-1<A<1), 7. acos(A) (-1<A<1), 8. atan(A)" << endl <<
-        "    9. logA(B) (A>0, A!=1, B>0) (Precision: .3)" << endl <<
-        "    10. GCD(A, B), 11. LCM(A, B), require that A and B is a positive integer" << endl << endl;
+    cout << "| Main Menu |"; co(0x70); cout << " Normal Mode "; co(0x07); cout << "| Complex Mode | Matrix Mode | Vector Mode |" << endl;
+    cout << "======================================================================" << endl << endl;
+
+    cout << "Functions List:" << endl;
+    co(0x0d); cout << "    1" ico(0x07)  ". " ico(0x0a) "abs" ico(0x07) "(A)" << endl;
+    co(0x0d); cout << "    2" ico(0x07)  ". " ico(0x0a) "ln" ico(0x07) "(A) (" ico(0x0c) "A>0" ico(0x07) ") (Precision: .3)" << endl;
+    co(0x0d); cout << "    3" ico(0x07)  ". " ico(0x0a) "sin" ico(0x07) "(A), " ico(0x0d)
+                      "4" ico(0x07) ". " ico(0x0a) "cos" ico(0x07) "(A), " ico(0x0d)
+                      "5" ico(0x07) ". " ico(0x0a) "tan" ico(0x07) "(A), " ico(0x0d)
+                      "6" ico(0x07) ". " ico(0x0a) "asin" ico(0x07) "(A) (" ico(0x0c) "-1<A<1" ico(0x07) "), " ico(0x0d)
+                      "7" ico(0x07) ". " ico(0x0a) "acos" ico(0x07) "(A) (" ico(0x0c) "-1<A<1" ico(0x07) "), " ico(0x0d)
+                      "8" ico(0x07) ". " ico(0x0a) "atan" ico(0x07) "(A)" << endl;
+    co(0x0d); cout << "    9" ico(0x07)  ". " ico(0x0a) "log" ico(0x07) "A(B) (" ico(0x0c)
+                      "A>0" ico(0x07) ", " ico(0x0c) "A!=1" ico(0x07) ", " ico(0x0c) "B>0" ico(0x07) ") (Precision: .3)" << endl;
+    co(0x0d); cout << "    10" ico(0x07) ". " ico(0x0a) "GCD" ico(0x07) "(A, B), " ico(0x0d)
+                      "11" ico(0x07) ". " ico(0x0a) "LCM" ico(0x07) "(A, B), require that A and B is a " ico(0x0c) "positive integer" << endl << endl; co(0x07);
 }
 
 void realMode1ERRORInfo() {
-    cout << endl << "--- ERROR: in real Number Mode ---" << endl;
+    co(0x0c); cout << endl << "--- ERROR: in real Number Mode ---" << endl; co(0x07);
     cout << "Have you:" << endl;
-    cout << "    1. Divided by 0." << endl;
-    cout << "    2. A^B or A_B and B is not an integer." << endl <<
+    cout << "    " ico(0x0d) "1" ico(0x07) ". Divided by 0." << endl;
+    cout << "    " ico(0x0d) "2" ico(0x07) ". A^B or A_B and B is not an integer." << endl <<
          "        (A^B requires that B is an integer, A_B requires that B is a positive integer)." << endl;
-    cout << "    3. A%B or A$B and A or B is not integer." << endl;
-    cout << "    4. Illegal input." << endl;
+    cout << "    " ico(0x0d) "3" ico(0x07) ". A%B or A$B and A or B is not integer." << endl;
+    cout << "    " ico(0x0d) "4" ico(0x07) ". Illegal input." << endl;
     cout << "?" << endl;
-    cout << "--- ERROR: End of error message ---" << endl << endl;
+    co(0x0c); cout << "--- ERROR: End of error message ---" << endl << endl; co(0x07);
 }
 
 void realMode2ERRORInfo() {
-    cout << endl << "--- ERROR: in real Number Mode ---" << endl;
+    co(0x0c); cout << endl << "--- ERROR: in real Number Mode ---" << endl; co(0x07);
     cout << "Have you given some wrong arguments to the function ?" << endl;
-    cout << "--- ERROR: End of error message ---" << endl << endl;
+    co(0x0c); cout << "--- ERROR: End of error message ---" << endl << endl; co(0x07);
 }

@@ -17,7 +17,7 @@ public:
     vec(const vector<basicNumber>& vec);
     vec(vec& other);
 
-    bool isEmpty();
+    int getLen();
 
     vec operator+(vec& other);
     vec operator-(vec& other);

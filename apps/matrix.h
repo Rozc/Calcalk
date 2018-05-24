@@ -25,20 +25,23 @@ public:
     int getRow() const;
     int getCol() const;
 
-    // TODO: operator stream
+    friend istream& operator>>(istream& in, matrix& item);
+    friend ostream& operator<<(ostream& out, const matrix& item);
 
-    matrix operator+(matrix& r) const;
-    matrix operator-(matrix& r) const;
-    matrix operator*(matrix& r) const;
-    friend matrix operator*(const basicNumber&, const matrix&) const;
+    matrix operator+(matrix& r);
+    matrix operator-(matrix& r);
+    matrix operator*(matrix& r);
+    friend matrix operator*(basicNumber, matrix&);
 
-    // matrix inverseMatrix() const;
+    matrix inverse();
 
 
-    matrix matrixT();
-    basicNumber matrixDet();
+    matrix T();
+    basicNumber det();
 
 };
+
+void matModeInfo();
 
 
 #endif //CALC_MATRIX_H
